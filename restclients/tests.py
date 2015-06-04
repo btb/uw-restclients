@@ -88,6 +88,7 @@ from restclients.test.r25.spaces import R25TestSpaces
 
 from restclients.test.wheniwork.accounts import WhenIWorkTestAccounts
 from restclients.test.wheniwork.shifts import WhenIWorkTestShifts
+from restclients.test.wheniwork.users import WhenIWorkTestUsers
 
 from restclients.test.myplan import MyPlanTestData
 

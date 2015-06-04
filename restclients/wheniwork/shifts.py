@@ -8,7 +8,7 @@ class Shifts(WhenIWork):
         """
         Get Existing Shift
 
-        http://dev.wheniwork.com/?shell#get-existing-shift
+        http://dev.wheniwork.com/#get-existing-shift
         """
         url = "/2/shifts/%s" % shift_id
 
@@ -18,7 +18,7 @@ class Shifts(WhenIWork):
         """
         List shifts
 
-        http://dev.wheniwork.com/?shell#listing-shifts
+        http://dev.wheniwork.com/#listing-shifts
         """
         url = "/2/shifts"
 
@@ -33,7 +33,7 @@ class Shifts(WhenIWork):
         """
         Modify an existing shift.
 
-        http://dev.wheniwork.com/?shell#create/update-shift
+        http://dev.wheniwork.com/#create/update-shift
         """
         url = "/2/shifts/%s" % shift.shift_id
 

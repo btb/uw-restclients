@@ -7,7 +7,7 @@ class Account(WhenIWork):
         """
         Return account resource for given wheniwork account id.
 
-        http://dev.wheniwork.com/?shell#get-existing-account
+        http://dev.wheniwork.com/#get-existing-account
         """
         url = "/2/account/%s" % account_id
         return self._account_from_json(self._get_resource(url)["account"])
@@ -16,7 +16,7 @@ class Account(WhenIWork):
         """
         Return list of accounts.
 
-        http://dev.wheniwork.com/?shell#listing-accounts
+        http://dev.wheniwork.com/#listing-accounts
         """
         url = "/2/account"
 
@@ -30,7 +30,7 @@ class Account(WhenIWork):
         """
         Update the passed account. Returns the updated account.
 
-        http://dev.wheniwork.com/?shell#create/update-account
+        http://dev.wheniwork.com/#create/update-account
         """
         url = "/2/account/%s" % account.account_id
         body = {"account": {"name": account.name}}

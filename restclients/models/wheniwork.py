@@ -21,3 +21,13 @@ class Shift(models.Model):
 
     class Meta:
         db_table = "restclients_wheniwork_shifts"
+
+
+class WhenIWorkUser(models.Model):
+    user_id = models.IntegerField(max_length=20)
+    first_name = models.CharField(max_length=100, null=True)
+    last_name = models.CharField(max_length=100, null=True)
+    email = models.CharField(max_length=100, null=True)
+
+    class Meta:
+        db_table = "restclients_wheniwork_user"
