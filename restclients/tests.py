@@ -86,6 +86,9 @@ from restclients.test.gws.trumba_group import TestGwsTrumbaGroup
 from restclients.test.r25.events import R25TestEvents
 from restclients.test.r25.spaces import R25TestSpaces
 
+from restclients.test.wheniwork.accounts import WhenIWorkTestAccounts
+from restclients.test.wheniwork.shifts import WhenIWorkTestShifts
+
 from restclients.test.myplan import MyPlanTestData
 
 from restclients.test.thread import ThreadsTest

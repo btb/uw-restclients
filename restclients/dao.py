@@ -21,6 +21,7 @@ from restclients.dao_implementation.hfs import File as HfsFile
 from restclients.dao_implementation.uwnetid import File as UwnetidFile
 from restclients.dao_implementation.r25 import File as R25File
 from restclients.dao_implementation.iasystem import File as IASystemFile
+from restclients.dao_implementation.wheniwork import File as WhenIWorkFile
 from restclients.cache_implementation import NoCache
 
 
@@ -318,3 +319,19 @@ class IASYSTEM_DAO(Subdomain_DAO):
 
     def _getDAO(self):
         return self._getModule('RESTCLIENTS_IASYSTEM_DAO_CLASS', IASystemFile)
+
+class WhenIWork_DAO(MY_DAO):
+    def getURL(self, url, headers):
+        return self._getURL('wheniwork', url, headers)
+
+    def putURL(self, url, headers, body):
+        return self._putURL('wheniwork', url, headers, body)
+
+    def postURL(self, url, headers, body):
+        return self._postURL('wheniwork', url, headers, body)
+
+    def deleteURL(self, url, headers):
+        return self._deleteURL('wheniwork', url, headers)
+
+    def _getDAO(self):
+        return self._getModule('RESTCLIENTS_WHENIWORK_DAO_CLASS', WhenIWorkFile)
