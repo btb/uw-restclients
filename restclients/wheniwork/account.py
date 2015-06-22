@@ -3,10 +3,11 @@ from restclients.models.wheniwork import WhenIWorkAccount
 
 
 class Account(WhenIWork):
-    def get_account(self, account_id):
+    def get_account(self, account_id = ""):
         """
-        Return account resource for given wheniwork account id.
+        Return primary account resource, or account for given wheniwork account id.
 
+        http://dev.wheniwork.com/#listing-accounts
         http://dev.wheniwork.com/#get-existing-account
         """
         url = "/2/account/%s" % account_id
