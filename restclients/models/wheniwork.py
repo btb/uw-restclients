@@ -12,6 +12,7 @@ class WhenIWorkAccount(models.Model):
 class Shift(models.Model):
     shift_id = models.IntegerField(max_length=20)
     user_id = models.IntegerField(max_length=20)
+    account_id = models.IntegerField(max_length=20)
     location_id = models.IntegerField(max_length=20)
     position_id = models.IntegerField(max_length=20)
     site_id = models.IntegerField(max_length=20)
@@ -31,3 +32,10 @@ class WhenIWorkUser(models.Model):
 
     class Meta:
         db_table = "restclients_wheniwork_user"
+
+class WhenIWorkLocation(models.Model):
+    location_id = models.IntegerField(max_length=20)
+    name = models.CharField(max_length=100, null=True)
+
+    class Meta:
+        db_table = "restclients_wheniwork_location"
