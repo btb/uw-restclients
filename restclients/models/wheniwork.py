@@ -36,6 +36,16 @@ class WhenIWorkUser(models.Model):
 class WhenIWorkLocation(models.Model):
     location_id = models.IntegerField(max_length=20)
     name = models.CharField(max_length=100, null=True)
+    address = models.CharField(max_length=100)
 
     class Meta:
         db_table = "restclients_wheniwork_location"
+
+class WhenIWorkSite(models.Model):
+    site_id = models.IntegerField(max_length=20)
+    name = models.CharField(max_length=100, null=True)
+    location_id = models.IntegerField(max_length=20)
+    address = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = "restclients_wheniwork_site"
