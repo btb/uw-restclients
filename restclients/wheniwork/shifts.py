@@ -59,7 +59,7 @@ class Shifts(WhenIWork):
 
         http://dev.wheniwork.com/#delete-shift
         """
-        url = "/2/shifts/?%s" % urlencode({ 'ids': ",".join(shifts) })
+        url = "/2/shifts/?%s" % urlencode({'ids': ",".join(shifts)})
 
         data = self._delete_resource(url)
         return data

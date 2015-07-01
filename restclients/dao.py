@@ -341,4 +341,5 @@ class WhenIWork_DAO(MY_DAO):
         return self._deleteURL('wheniwork', url, headers)
 
     def _getDAO(self):
-        return self._getModule('RESTCLIENTS_WHENIWORK_DAO_CLASS', WhenIWorkFile)
+        return self._getModule('RESTCLIENTS_WHENIWORK_DAO_CLASS',
+                               WhenIWorkFile)
