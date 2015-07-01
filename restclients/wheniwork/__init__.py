@@ -1,0 +1,80 @@
+"""
+This is the interface for interacting with When I Work's web services.
+"""
+from django.conf import settings
+from restclients.dao import WhenIWork_DAO
+from restclients.exceptions import DataFailureException
+from urllib import quote, unquote
+import warnings
+import json
+import re
+
+
+DEFAULT_PAGINATION = 0
+MASQUERADING_USER = None
+
+
+class WhenIWork(object):
+    """
+    The WhenIWork object has methods for getting information
+    about workers and shifts within When I Work
+    """
+
+    def __init__(self):
+        self._re_wheniwork_id = re.compile(r'^\d+$')
+
+    def valid_wheniwork_id(self, wheniwork_id):
+        return self._re_wheniwork_id.match(str(wheniwork_id)) is not None
+
+    def _get_resource(self, url, data_key=None):
+        """
+        When I Work GET method. Return representation of the requested
+        resource.
+        """
+        response = WhenIWork_DAO().getURL(url, {"Accept": "application/json"})
+
+        if response.status != 200:
+            raise DataFailureException(url, response.status, response.data)
+
+        return json.loads(response.data)
+
+    def _put_resource(self, url, body):
+        """
+        When I Work PUT method.
+        """
+        headers = {"Content-Type": "application/json",
+                   "Accept": "application/json"}
+        response = WhenIWork_DAO().putURL(url, headers, json.dumps(body))
+
+        if not (response.status == 200 or response.status == 201 or
+                response.status == 204):
+            raise DataFailureException(url, response.status, response.data)
+
+        return json.loads(response.data)
+
+    def _post_resource(self, url, body):
+        """
+        When I Work POST method.
+        """
+        headers = {"Content-Type": "application/json",
+                   "Accept": "application/json"}
+        response = WhenIWork_DAO().postURL(url, headers, json.dumps(body))
+
+        if not (response.status == 200 or response.status == 204):
+            raise DataFailureException(url, response.status, response.data)
+
+        return json.loads(response.data)
+
+    def _delete_resource(self, url):
+        """
+        When I Work DELETE method.
+        """
+        headers = {"Content-Type": "application/json",
+                   "Accept": "application/json"}
+        response = WhenIWork_DAO().deleteURL(url, headers)
+
+        if not (response.status == 200 or response.status == 201 or
+                response.status == 204):
+            raise DataFailureException(url, response.status, response.data)
+
+        return json.loads(response.data)
