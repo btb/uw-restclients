@@ -41,6 +41,13 @@ class WhenIWorkLocation(models.Model):
     class Meta:
         db_table = "restclients_wheniwork_location"
 
+class WhenIWorkPosition(models.Model):
+    position_id = models.IntegerField(max_length=20)
+    name = models.CharField(max_length=100, null=True)
+
+    class Meta:
+        db_table = "restclients_wheniwork_position"
+
 class WhenIWorkSite(models.Model):
     site_id = models.IntegerField(max_length=20)
     name = models.CharField(max_length=100, null=True)
