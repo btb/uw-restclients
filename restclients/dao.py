@@ -39,7 +39,7 @@ class DAO_BASE(object):
                 config_module = getattr(mod, attr)
             except AttributeError:
                 raise ImproperlyConfigured('Module "%s" does not define a '
-                                   '"%s" class' % (module, attr))
+                                           '"%s" class' % (module, attr))
             return config_module()
         else:
             return default_class()
@@ -53,7 +53,7 @@ class MY_DAO(DAO_BASE):
         dao = self._getDAO()
         cache = self._getCache()
         cache_response = cache.getCache(service, url, headers)
-        if cache_response != None:
+        if cache_response is not None:
             if "response" in cache_response:
                 return cache_response["response"]
             if "headers" in cache_response:
@@ -63,7 +63,7 @@ class MY_DAO(DAO_BASE):
 
         cache_post_response = cache.processResponse(service, url, response)
 
-        if cache_post_response != None:
+        if cache_post_response is not None:
             if "response" in cache_post_response:
                 return cache_post_response["response"]
 
@@ -91,7 +91,7 @@ class Subdomain_DAO(MY_DAO):
         cache = self._getCache()
         cache_url = subdomain + url
         cache_response = cache.getCache(service, cache_url, headers)
-        if cache_response != None:
+        if cache_response is not None:
             if "response" in cache_response:
                 return cache_response["response"]
             if "headers" in cache_response:
@@ -99,9 +99,11 @@ class Subdomain_DAO(MY_DAO):
 
         response = dao.getURL(url, headers, subdomain)
 
-        cache_post_response = cache.processResponse(service, cache_url, response)
+        cache_post_response = cache.processResponse(service,
+                                                    cache_url,
+                                                    response)
 
-        if cache_post_response != None:
+        if cache_post_response is not None:
             if "response" in cache_post_response:
                 return cache_post_response["response"]
 
@@ -247,7 +249,8 @@ class Libraries_DAO(MY_DAO):
         return self._getURL('libraries', url, headers)
 
     def _getDAO(self):
-        return self._getModule('RESTCLIENTS_LIBRARIES_DAO_CLASS', LibrariesFile)
+        return self._getModule('RESTCLIENTS_LIBRARIES_DAO_CLASS',
+                               LibrariesFile)
 
 
 class MyPlan_DAO(MY_DAO):
@@ -264,6 +267,7 @@ class Uwnetid_DAO(MY_DAO):
 
     def _getDAO(self):
         return self._getModule('RESTCLIENTS_UWNETID_DAO_CLASS', UwnetidFile)
+
 
 class TrumbaCalendar_DAO(MY_DAO):
     def getURL(self, url, headers=None):
@@ -286,6 +290,7 @@ class TrumbaBot_DAO(MY_DAO):
         return self._getModule('RESTCLIENTS_TRUMBA_BOT_DAO_CLASS',
                                FileBot)
 
+
 class TrumbaSea_DAO(MY_DAO):
     service_id = FileSea().get_path_prefix()
 
@@ -298,6 +303,7 @@ class TrumbaSea_DAO(MY_DAO):
     def _getDAO(self):
         return self._getModule('RESTCLIENTS_TRUMBA_SEA_DAO_CLASS',
                                FileSea)
+
 
 class TrumbaTac_DAO(MY_DAO):
     service_id = FileTac().get_path_prefix()
@@ -319,6 +325,7 @@ class IASYSTEM_DAO(Subdomain_DAO):
 
     def _getDAO(self):
         return self._getModule('RESTCLIENTS_IASYSTEM_DAO_CLASS', IASystemFile)
+
 
 class WhenIWork_DAO(MY_DAO):
     def getURL(self, url, headers):

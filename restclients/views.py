@@ -29,7 +29,7 @@ def proxy(request, service, url):
     user_service = UserService()
     actual_user = user_service.get_original_user()
     g = Group()
-    is_admin = g.is_member_of_group(actual_user, 
+    is_admin = g.is_member_of_group(actual_user,
                                     settings.RESTCLIENTS_ADMIN_GROUP)
 
     if not is_admin:
@@ -60,6 +60,15 @@ def proxy(request, service, url):
         dao = MyPlan_DAO()
     elif service == "iasystem":
         dao = IASYSTEM_DAO()
+        headers = {"Accept": "application/vnd.collection+json"}
+        subdomain = None
+        if url.endswith('/evaluation'):
+            if url.startswith('uwb/') or url.startswith('uwt/'):
+                subdomain = url[:3]
+                url = url[4:]
+            else:
+                subdomain = url[:2]
+                url = url[3:]
     elif service == "calendar":
         dao = TrumbaCalendar_DAO()
         use_pre = True
@@ -73,7 +82,10 @@ def proxy(request, service, url):
 
     start = time()
     try:
-        response = dao.getURL(url, headers)
+        if service == "iasystem" and subdomain is not None:
+            response = dao.getURL(url, headers, subdomain)
+        else:
+            response = dao.getURL(url, headers)
     except Exception as ex:
         response = MockHTTP()
         response.status = 500
@@ -85,13 +97,13 @@ def proxy(request, service, url):
     try:
         if not use_pre:
             content = format_json(service, response.data)
-            json_data = response.data;
+            json_data = response.data
         else:
             content = response.data
             json_data = None
     except Exception as e:
         content = format_html(service, response.data)
-        json_data = None;
+        json_data = None
 
     context = {
         "url": unquote(url),
@@ -149,14 +161,14 @@ def format_json(service, content):
     formatted = formatted.replace("\n", "<br/>\n")
 
     formatted = re.sub(r"\"/(.*?)\"",
-                       r'"<a href="/restclients/view/%s/\1">/\1</a>"' % \
-                           service, formatted)
+                       r'"<a href="/restclients/view/%s/\1">/\1</a>"' %
+                       service, formatted)
 
     return formatted
 
 
 def format_html(service, content):
-    formatted = re.sub(r"href\s*=\s*\"/(.*?)\"", 
+    formatted = re.sub(r"href\s*=\s*\"/(.*?)\"",
                        r"href='/restclients/view/%s/\1'" % service, content)
     formatted = re.sub(re.compile(r"<style.*/style>", re.S), "", formatted)
     formatted = clean_self_closing_divs(formatted)
