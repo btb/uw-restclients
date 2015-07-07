@@ -1,6 +1,7 @@
 from django.conf import settings
 from restclients.wheniwork import WhenIWork
 from restclients.models.wheniwork import WhenIWorkUser
+from urllib import urlencode
 
 
 class Users(WhenIWork):
@@ -14,17 +15,17 @@ class Users(WhenIWork):
 
         return self._user_from_json(self._get_resource(url)["user"])
 
-    def get_users(self):
+    def get_users(self, params={}):
         """
         Returns a list of users.
 
         http://dev.wheniwork.com/#listing-users
         """
-        url = "/2/users"
+        url = "/2/users/?%s" % urlencode(params)
 
         data = self._get_resource(url)
         users = []
-        for entry in data:
+        for entry in data["users"]:
             users.append(self._user_from_json(entry))
 
         return users
@@ -35,4 +36,6 @@ class Users(WhenIWork):
         user.first_name = data["first_name"]
         user.last_name = data["last_name"]
         user.email = data["email"] if "email" in data else None
+        user.employee_code = data["employee_code"]
+
         return user

@@ -30,6 +30,7 @@ class WhenIWorkUser(models.Model):
     first_name = models.CharField(max_length=100, null=True)
     last_name = models.CharField(max_length=100, null=True)
     email = models.CharField(max_length=100, null=True)
+    employee_code = models.CharField(max_length=100, null=True)
 
     class Meta:
         db_table = "restclients_wheniwork_user"
