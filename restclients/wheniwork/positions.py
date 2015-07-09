@@ -1,6 +1,6 @@
 from django.conf import settings
 from restclients.wheniwork import WhenIWork
-from restclients.models.wheniwork import WhenIWorkPosition
+from restclients.models.wheniwork import Position
 
 
 class Positions(WhenIWork):
@@ -42,7 +42,7 @@ class Positions(WhenIWork):
         return self._position_from_json(data["position"])
 
     def _position_from_json(self, data):
-        position = WhenIWorkPosition()
+        position = Position()
         position.id = data["id"]
         position.name = data["name"]
         return position

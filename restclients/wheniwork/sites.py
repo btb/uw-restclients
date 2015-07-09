@@ -1,6 +1,6 @@
 from django.conf import settings
 from restclients.wheniwork import WhenIWork
-from restclients.models.wheniwork import WhenIWorkSite
+from restclients.models.wheniwork import Site
 
 
 class Sites(WhenIWork):
@@ -42,7 +42,7 @@ class Sites(WhenIWork):
         return self._site_from_json(data["site"])
 
     def _site_from_json(self, data):
-        site = WhenIWorkSite()
+        site = Site()
         site.id = data["id"]
         site.name = data["name"]
         site.location_id = data["location_id"]

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from restclients.wheniwork.users import Users
-from restclients.models.wheniwork import WhenIWorkUser
+from restclients.models.wheniwork import User
 
 
 class WhenIWorkTestUsers(TestCase):
