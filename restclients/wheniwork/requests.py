@@ -26,7 +26,12 @@ class Requests(WhenIWork):
 
         data = self._get_resource(url)
         requests = []
+        for entry in data["users"]:
+            user = Users()._user_from_json(entry)
+            user.save()
         for entry in data["requests"]:
+            request = self._request_from_json(entry)
+            request.save()
             requests.append(self._request_from_json(entry))
 
         return requests
