@@ -87,5 +87,5 @@ class Requests(WhenIWork):
         request.created_at = dateutil.parser.parse(data['created_at'])
         request.updated_at = dateutil.parser.parse(data['updated_at'])
         request.canceled_by_id = data['canceled_by']
-        request.hours = data['hours']
+        request.hours = str(data['hours'])
         return request
