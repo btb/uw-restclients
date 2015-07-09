@@ -32,7 +32,7 @@ class Users(WhenIWork):
 
     def _user_from_json(self, data):
         user = WhenIWorkUser()
-        user.user_id = data["id"]
+        user.id = data["id"]
         user.first_name = data["first_name"]
         user.last_name = data["last_name"]
         user.email = data["email"] if "email" in data else None

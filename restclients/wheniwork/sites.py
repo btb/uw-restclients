@@ -43,7 +43,7 @@ class Sites(WhenIWork):
 
     def _site_from_json(self, data):
         site = WhenIWorkSite()
-        site.site_id = data["id"]
+        site.id = data["id"]
         site.name = data["name"]
         site.location_id = data["location_id"]
         site.address = data["address"]

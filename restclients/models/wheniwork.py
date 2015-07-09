@@ -2,31 +2,16 @@ from django.db import models
 
 
 class WhenIWorkAccount(models.Model):
-    account_id = models.IntegerField(max_length=20)
+    id = models.PositiveIntegerField(primary_key=True)
+    master = models.ForeignKey('self')
     company = models.CharField(max_length=500)
-    master_id = models.IntegerField(max_length=20)
 
     class Meta:
         db_table = "restclients_wheniwork_account"
 
 
-class Shift(models.Model):
-    shift_id = models.IntegerField(max_length=20)
-    user_id = models.IntegerField(max_length=20)
-    account_id = models.IntegerField(max_length=20)
-    location_id = models.IntegerField(max_length=20)
-    position_id = models.IntegerField(max_length=20)
-    site_id = models.IntegerField(max_length=20)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
-    notes = models.CharField(max_length=350)
-
-    class Meta:
-        db_table = "restclients_wheniwork_shifts"
-
-
 class WhenIWorkUser(models.Model):
-    user_id = models.IntegerField(max_length=20)
+    id = models.PositiveIntegerField(primary_key=True)
     first_name = models.CharField(max_length=100, null=True)
     last_name = models.CharField(max_length=100, null=True)
     email = models.CharField(max_length=100, null=True)
@@ -37,7 +22,7 @@ class WhenIWorkUser(models.Model):
 
 
 class WhenIWorkLocation(models.Model):
-    location_id = models.IntegerField(max_length=20)
+    id = models.PositiveIntegerField(primary_key=True)
     name = models.CharField(max_length=100, null=True)
     address = models.CharField(max_length=100)
 
@@ -46,7 +31,7 @@ class WhenIWorkLocation(models.Model):
 
 
 class WhenIWorkPosition(models.Model):
-    position_id = models.IntegerField(max_length=20)
+    id = models.PositiveIntegerField(primary_key=True)
     name = models.CharField(max_length=100, null=True)
 
     class Meta:
@@ -54,10 +39,42 @@ class WhenIWorkPosition(models.Model):
 
 
 class WhenIWorkSite(models.Model):
-    site_id = models.IntegerField(max_length=20)
+    id = models.PositiveIntegerField(primary_key=True)
     name = models.CharField(max_length=100, null=True)
-    location_id = models.IntegerField(max_length=20)
+    location = models.ForeignKey(WhenIWorkLocation)
     address = models.CharField(max_length=100)
 
     class Meta:
         db_table = "restclients_wheniwork_site"
+
+class WhenIWorkShift(models.Model):
+    id = models.PositiveIntegerField(primary_key=True)
+    account = models.ForeignKey(WhenIWorkAccount)
+    user = models.ForeignKey(WhenIWorkUser)
+    location = models.ForeignKey(WhenIWorkLocation)
+    position = models.ForeignKey(WhenIWorkPosition)
+    site = models.ForeignKey(WhenIWorkSite)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    notes = models.CharField(max_length=350)
+
+    class Meta:
+        db_table = "restclients_wheniwork_shifts"
+
+
+class WhenIWorkRequest(models.Model):
+    id = models.PositiveIntegerField(primary_key=True)
+    account = models.ForeignKey(WhenIWorkAccount)
+    user = models.ForeignKey(WhenIWorkUser)
+    creator = models.ForeignKey(WhenIWorkUser, related_name='+')
+    status = models.PositiveSmallIntegerField()
+    type = models.PositiveSmallIntegerField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+    canceled_by = models.ForeignKey(WhenIWorkUser, related_name='+')
+    hours = models.DecimalField(max_digits=5, decimal_places=2)
+
+    class Meta:
+        db_table = "restclients_wheniwork_request"

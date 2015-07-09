@@ -43,7 +43,7 @@ class Locations(WhenIWork):
 
     def _location_from_json(self, data):
         location = WhenIWorkLocation()
-        location.location_id = data["id"]
+        location.id = data["id"]
         location.name = data["name"]
         location.address = data["address"]
         return location
