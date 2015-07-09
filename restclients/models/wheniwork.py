@@ -9,6 +9,7 @@ class Account(models.Model):
 
     class Meta:
         db_table = "restclients_wheniwork_account"
+        app_label = 'restclients'
 
 
 class User(models.Model):
@@ -20,6 +21,7 @@ class User(models.Model):
 
     class Meta:
         db_table = "restclients_wheniwork_user"
+        app_label = 'restclients'
 
 
 class Location(models.Model):
@@ -29,6 +31,7 @@ class Location(models.Model):
 
     class Meta:
         db_table = "restclients_wheniwork_location"
+        app_label = 'restclients'
 
 
 class Position(models.Model):
@@ -37,6 +40,7 @@ class Position(models.Model):
 
     class Meta:
         db_table = "restclients_wheniwork_position"
+        app_label = 'restclients'
 
 
 class Site(models.Model):
@@ -47,6 +51,7 @@ class Site(models.Model):
 
     class Meta:
         db_table = "restclients_wheniwork_site"
+        app_label = 'restclients'
 
 
 class Shift(models.Model):
@@ -62,6 +67,7 @@ class Shift(models.Model):
 
     class Meta:
         db_table = "restclients_wheniwork_shifts"
+        app_label = 'restclients'
 
 
 class Request(models.Model):
@@ -104,6 +110,7 @@ class Request(models.Model):
 
     class Meta:
         db_table = "restclients_wheniwork_request"
+        app_label = 'restclients'
 
 
 class Message(models.Model):
@@ -121,3 +128,4 @@ class Message(models.Model):
 
     class Meta:
         db_table = "restclients_wheniwork_message"
+        app_label = 'restclients'
