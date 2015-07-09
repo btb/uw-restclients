@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.conf import settings
-from restclients.wheniwork.account import Account as WhenIWork
+from restclients.wheniwork.account import Accounts as WhenIWork
 from restclients.exceptions import DataFailureException
 
 class WhenIWorkTestAccounts(TestCase):
