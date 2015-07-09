@@ -20,6 +20,14 @@ from restclients.models.gws import GroupUser as gwsGroupUser
 from restclients.models.gws import GroupMember as gwsGroupMember
 from restclients.models.canvas import CanvasCourse as canvasCourse
 from restclients.models.canvas import CanvasEnrollment as canvasEnrollment
+from restclients.models.wheniwork import Account as wiwAccount
+from restclients.models.wheniwork import User as wiwUser
+from restclients.models.wheniwork import Location as wiwLocation
+from restclients.models.wheniwork import Position as wiwPosition
+from restclients.models.wheniwork import Site as wiwSite
+from restclients.models.wheniwork import Shift as wiwShift
+from restclients.models.wheniwork import Request as wiwRequest
+from restclients.models.wheniwork import Message as wiwMessage
 
 
 # These aliases are here for backwards compatibility
