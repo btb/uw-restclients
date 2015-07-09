@@ -1,6 +1,7 @@
 from restclients.wheniwork import WhenIWork
-from restclients.models.wheniwork import WhenIWorkRequest, WhenIWorkUser
+from restclients.models.wheniwork import Request
 from restclients.wheniwork.users import Users
+from restclients.wheniwork.messages import Messages
 import dateutil.parser
 from urllib import urlencode
 
@@ -32,7 +33,10 @@ class Requests(WhenIWork):
         for entry in data["requests"]:
             request = self._request_from_json(entry)
             request.save()
-            requests.append(self._request_from_json(entry))
+            requests.append(request)
+        for entry in data["messages"]:
+            message = Messages()._message_from_json(entry)
+            message.save()
 
         return requests
 
@@ -71,7 +75,7 @@ class Requests(WhenIWork):
         return data
 
     def _request_from_json(self, data):
-        request = WhenIWorkRequest()
+        request = Request()
         request.id = data['id']
         request.account_id = data['account_id']
         request.user_id = data['user_id']

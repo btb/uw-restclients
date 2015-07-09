@@ -1,8 +1,8 @@
 from restclients.wheniwork import WhenIWork
-from restclients.models.wheniwork import WhenIWorkAccount
+from restclients.models.wheniwork import Account
 
 
-class Account(WhenIWork):
+class Accounts(WhenIWork):
     def get_account(self, account_id=""):
         """
         Return primary account resource, or account for given wheniwork
@@ -41,7 +41,7 @@ class Account(WhenIWork):
         return self._account_from_json(data)
 
     def _account_from_json(self, data):
-        account = WhenIWorkAccount()
+        account = Account()
         account.id = data["id"]
         account.company = data["company"]
         account.master_id = data["master_id"]

@@ -1,6 +1,6 @@
 from django.conf import settings
 from restclients.wheniwork import WhenIWork
-from restclients.models.wheniwork import WhenIWorkUser
+from restclients.models.wheniwork import User
 from urllib import urlencode
 
 
@@ -31,7 +31,7 @@ class Users(WhenIWork):
         return users
 
     def _user_from_json(self, data):
-        user = WhenIWorkUser()
+        user = User()
         user.id = data["id"]
         user.first_name = data["first_name"]
         user.last_name = data["last_name"]

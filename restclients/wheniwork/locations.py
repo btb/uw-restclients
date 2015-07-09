@@ -1,6 +1,6 @@
 from django.conf import settings
 from restclients.wheniwork import WhenIWork
-from restclients.models.wheniwork import WhenIWorkLocation
+from restclients.models.wheniwork import Location
 
 
 class Locations(WhenIWork):
@@ -42,7 +42,7 @@ class Locations(WhenIWork):
         return self._location_from_json(data["location"])
 
     def _location_from_json(self, data):
-        location = WhenIWorkLocation()
+        location = Location()
         location.id = data["id"]
         location.name = data["name"]
         location.address = data["address"]
