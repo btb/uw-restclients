@@ -11,7 +11,7 @@ class WhenIWorkTestUsers(TestCase):
 
             user = wheniwork.get_user(188885)
 
-            self.assertEquals(user.user_id, 188885, "Has correct user id")
+            self.assertEquals(user.id, 188885, "Has correct user id")
             self.assertEquals(user.first_name, "Joe", "Has correct first name")
             self.assertEquals(user.last_name, "User", "Has correct last name")
             self.assertEquals(user.email, "testid99@foo.com", "Has correct email")

@@ -43,6 +43,6 @@ class Positions(WhenIWork):
 
     def _position_from_json(self, data):
         position = WhenIWorkPosition()
-        position.position_id = data["id"]
+        position.id = data["id"]
         position.name = data["name"]
         return position

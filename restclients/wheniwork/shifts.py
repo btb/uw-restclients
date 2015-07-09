@@ -1,5 +1,5 @@
 from restclients.wheniwork import WhenIWork
-from restclients.models.wheniwork import Shift
+from restclients.models.wheniwork import WhenIWorkShift
 import dateutil.parser
 from urllib import urlencode
 
@@ -25,9 +25,9 @@ class Shifts(WhenIWork):
 
         data = self._get_resource(url)
         shifts = []
-        for shift in data["shifts"]:
-            shift = self._shift_from_json(shift)
-            shifts.append(shift)
+        for entry in data["shifts"]:
+            shifts.append(self._shift_from_json(entry))
+
         return shifts
 
     def create_shift(self, params={}):
@@ -65,8 +65,8 @@ class Shifts(WhenIWork):
         return data
 
     def _shift_from_json(self, data):
-        shift = Shift()
-        shift.shift_id = data['id']
+        shift = WhenIWorkShift()
+        shift.id = data['id']
         shift.user_id = data['user_id']
         shift.account_id = data['account_id']
         shift.location_id = data['location_id']

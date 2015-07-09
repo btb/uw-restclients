@@ -23,8 +23,8 @@ class Account(WhenIWork):
         url = "/2/account"
 
         accounts = []
-        for datum in self._get_resource(url):
-            accounts.append(self._account_from_json(datum))
+        for entry in self._get_resource(url):
+            accounts.append(self._account_from_json(entry))
 
         return accounts
 
@@ -42,7 +42,7 @@ class Account(WhenIWork):
 
     def _account_from_json(self, data):
         account = WhenIWorkAccount()
-        account.account_id = data["id"]
+        account.id = data["id"]
         account.company = data["company"]
         account.master_id = data["master_id"]
         return account
