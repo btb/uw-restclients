@@ -7,16 +7,6 @@ from urllib import urlencode
 
 
 class Requests(WhenIWork):
-    def get_request(self, request_id):
-        """
-        Get Existing Request
-
-        http://dev.wheniwork.com/#get-existing-request
-        """
-        url = "/2/requests/%s" % request_id
-
-        return self._request_from_json(self._get_resource(url)["request"])
-
     def get_requests(self, params={}):
         """
         List requests
@@ -39,40 +29,6 @@ class Requests(WhenIWork):
             message.save()
 
         return requests
-
-    def create_request(self, params={}):
-        """
-        Creates a request
-
-        http://dev.wheniwork.com/#create/update-request
-        """
-        url = "/2/requests/"
-        body = params
-
-        data = self._post_resource(url, body)
-        return self._request_from_json(data["request"])
-
-    def update_request(self, request):
-        """
-        Modify an existing request.
-
-        http://dev.wheniwork.com/#create/update-request
-        """
-        url = "/2/requests/%s" % request.request_id
-
-        data = self._put_resource(url, request.json_data())
-        return self._request_from_json(data)
-
-    def delete_requests(self, requests):
-        """
-        Delete existing requests.
-
-        http://dev.wheniwork.com/#delete-existing-request
-        """
-        url = "/2/requests/?%s" % urlencode({'ids': ",".join(requests)})
-
-        data = self._delete_resource(url)
-        return data
 
     def _request_from_json(self, data):
         request = Request()

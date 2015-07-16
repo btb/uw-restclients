@@ -1,20 +1,14 @@
 from restclients.wheniwork import WhenIWork
 from restclients.models.wheniwork import Shift
+from restclients.wheniwork.locations import Locations
+from restclients.wheniwork.sites import Sites
+from restclients.wheniwork.positions import Positions
+from restclients.wheniwork.users import Users
 import dateutil.parser
 from urllib import urlencode
 
 
 class Shifts(WhenIWork):
-    def get_shift(self, shift_id):
-        """
-        Get Existing Shift
-
-        http://dev.wheniwork.com/#get-existing-shift
-        """
-        url = "/2/shifts/%s" % shift_id
-
-        return self._shift_from_json(self._get_resource(url))
-
     def get_shifts(self, params={}):
         """
         List shifts
@@ -25,8 +19,22 @@ class Shifts(WhenIWork):
 
         data = self._get_resource(url)
         shifts = []
+        for entry in data["locations"]:
+            location = Locations()._location_from_json(entry)
+            location.save()
+        for entry in data["sites"]:
+            site = Sites()._site_from_json(entry)
+            site.save()
+        for entry in data["positions"]:
+            position = Positions()._position_from_json(entry)
+            position.save()
+        for entry in data["users"]:
+            user = Users()._user_from_json(entry)
+            user.save()
         for entry in data["shifts"]:
-            shifts.append(self._shift_from_json(entry))
+            shift = self._shift_from_json(entry)
+            shift.save()
+            shifts.append(shift)
 
         return shifts
 
@@ -40,18 +48,10 @@ class Shifts(WhenIWork):
         body = params
 
         data = self._post_resource(url, body)
-        return self._shift_from_json(data["shift"])
+        shift = self._shift_from_json(data["shift"])
+        shift.save()
 
-    def update_shift(self, shift):
-        """
-        Modify an existing shift.
-
-        http://dev.wheniwork.com/#create/update-shift
-        """
-        url = "/2/shifts/%s" % shift.shift_id
-
-        data = self._put_resource(url, shift.json_data())
-        return self._shift_from_json(data)
+        return shift
 
     def delete_shifts(self, shifts):
         """
@@ -62,6 +62,9 @@ class Shifts(WhenIWork):
         url = "/2/shifts/?%s" % urlencode({'ids': ",".join(shifts)})
 
         data = self._delete_resource(url)
+        for shift in Shift().objects.filter(id__in=shifts):
+            shift.delete()
+
         return data
 
     def _shift_from_json(self, data):
