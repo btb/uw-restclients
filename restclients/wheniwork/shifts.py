@@ -19,16 +19,16 @@ class Shifts(WhenIWork):
 
         data = self._get_resource(url)
         shifts = []
-        for entry in data["locations"]:
+        for entry in data.get("locations", []):
             location = Locations()._location_from_json(entry)
             location.save()
-        for entry in data["sites"]:
+        for entry in data.get("sites", []):
             site = Sites()._site_from_json(entry)
             site.save()
-        for entry in data["positions"]:
+        for entry in data.get("positions", []):
             position = Positions()._position_from_json(entry)
             position.save()
-        for entry in data["users"]:
+        for entry in data.get("users", []):
             user = Users()._user_from_json(entry)
             user.save()
         for entry in data["shifts"]:
