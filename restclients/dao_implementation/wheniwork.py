@@ -77,7 +77,7 @@ class Live(object):
         host = settings.RESTCLIENTS_WHENIWORK_HOST
         token = settings.RESTCLIENTS_WHENIWORK_TOKEN
 
-        if not "W-Token" in headers:
+        if "W-Token" not in headers:
             headers["W-Token"] = "%s" % token
 
         if Live.pool is None:
@@ -90,7 +90,7 @@ class Live(object):
         host = settings.RESTCLIENTS_WHENIWORK_HOST
         token = settings.RESTCLIENTS_WHENIWORK_TOKEN
 
-        if not "W-Token" in headers:
+        if "W-Token" not in headers:
             headers["W-Token"] = "%s" % token
 
         if Live.pool is None:
@@ -103,7 +103,7 @@ class Live(object):
         host = settings.RESTCLIENTS_WHENIWORK_HOST
         token = settings.RESTCLIENTS_WHENIWORK_TOKEN
 
-        if not "W-Token" in headers:
+        if "W-Token" not in headers:
             headers["W-Token"] = "%s" % token
 
         if Live.pool is None:
@@ -116,7 +116,7 @@ class Live(object):
         host = settings.RESTCLIENTS_WHENIWORK_HOST
         token = settings.RESTCLIENTS_WHENIWORK_TOKEN
 
-        if not "W-Token" in headers:
+        if "W-Token" not in headers:
             headers["W-Token"] = "%s" % token
 
         if Live.pool is None:
