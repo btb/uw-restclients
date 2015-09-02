@@ -20,8 +20,9 @@ class WhenIWork(object):
     about workers and shifts within When I Work
     """
 
-    def __init__(self):
+    def __init__(self, token=None):
         self._re_wheniwork_id = re.compile(r'^\d+$')
+        self.token = token
 
     def valid_wheniwork_id(self, wheniwork_id):
         return self._re_wheniwork_id.match(str(wheniwork_id)) is not None
@@ -31,7 +32,10 @@ class WhenIWork(object):
         When I Work GET method. Return representation of the requested
         resource.
         """
-        response = WhenIWork_DAO().getURL(url, {"Accept": "application/json"})
+        headers = {"Accept": "application/json"}
+        if self.token:
+            headers["W-Token"] = "%s" % self.token
+        response = WhenIWork_DAO().getURL(url, headers)
 
         if response.status != 200:
             raise DataFailureException(url, response.status, response.data)
@@ -44,6 +48,8 @@ class WhenIWork(object):
         """
         headers = {"Content-Type": "application/json",
                    "Accept": "application/json"}
+        if self.token:
+            headers["W-Token"] = "%s" % self.token
         response = WhenIWork_DAO().putURL(url, headers, json.dumps(body))
 
         if not (response.status == 200 or response.status == 201 or
@@ -58,6 +64,8 @@ class WhenIWork(object):
         """
         headers = {"Content-Type": "application/json",
                    "Accept": "application/json"}
+        if self.token:
+            headers["W-Token"] = "%s" % self.token
         response = WhenIWork_DAO().postURL(url, headers, json.dumps(body))
 
         if not (response.status == 200 or response.status == 204):
@@ -71,6 +79,8 @@ class WhenIWork(object):
         """
         headers = {"Content-Type": "application/json",
                    "Accept": "application/json"}
+        if self.token:
+            headers["W-Token"] = "%s" % self.token
         response = WhenIWork_DAO().deleteURL(url, headers)
 
         if not (response.status == 200 or response.status == 201 or
