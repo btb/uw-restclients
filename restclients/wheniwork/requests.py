@@ -13,6 +13,8 @@ class Requests(WhenIWork):
 
         http://dev.wheniwork.com/#listing-requests
         """
+        if "status" in params:
+            params['status'] = ','.join(map(str, params['status']))
         url = "/2/requests/?%s" % urlencode(params)
 
         data = self._get_resource(url)
