@@ -102,9 +102,9 @@ class Request(models.Model):
     canceled_by = models.ForeignKey(User, related_name='+')
     hours = models.DecimalField(max_digits=5, decimal_places=2)
 
-    def is_allday(self, tz):
-        if self.start_time.astimezone(tz).time() == time(0, 0, 0) \
-                and self.end_time.astimezone(tz).time() == time(23, 59, 59):
+    def is_allday(self):
+        if self.start_time.time() == time(0, 0, 0) \
+                and self.end_time.time() == time(23, 59, 59):
             return True
         return False
 
