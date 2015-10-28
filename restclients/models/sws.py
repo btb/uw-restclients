@@ -3,9 +3,13 @@ from django.db import models
 from django.template import Context, loader
 from base64 import b64encode, b64decode
 from datetime import datetime
-from restclients.util.date_formator import abbr_week_month_day_str
 from restclients.exceptions import InvalidCanvasIndependentStudyCourse
 from restclients.exceptions import InvalidCanvasSection
+from restclients.util.date_formator import abbr_week_month_day_str
+from restclients.util.datetime_convertor import convert_to_begin_of_day,\
+    convert_to_end_of_day
+from restclients.util.summer_term import is_a_term, is_b_term,\
+    is_full_summer_term
 
 
 # PWS Person
@@ -24,6 +28,9 @@ class Person(models.Model):
     surname = models.CharField(max_length=100)
     full_name = models.CharField(max_length=250)
     display_name = models.CharField(max_length=250)
+
+    student_number = models.CharField(max_length=9)
+    employee_id = models.CharField(max_length=9)
 
     is_student = models.NullBooleanField()
     is_staff = models.NullBooleanField()
@@ -44,6 +51,11 @@ class Person(models.Model):
     title1 = models.CharField(max_length=255)
     title2 = models.CharField(max_length=255)
     home_department = models.CharField(max_length=255)
+
+    student_class = models.CharField(max_length=255)
+    student_department1 = models.CharField(max_length=255)
+    student_department2 = models.CharField(max_length=255)
+    student_department3 = models.CharField(max_length=255)
 
     def json_data(self):
         return {'uwnetid': self.uwnetid,
@@ -249,6 +261,53 @@ class Term(models.Model):
             return (days / 7) + 1
 
         return (days / 7)
+
+    def is_summer_quarter(self):
+        return self.quarter.lower() == "summer"
+
+    def get_bod_first_day(self):
+        # returns a datetime object of the midnight at begining of day
+        return convert_to_begin_of_day(self.first_day_quarter)
+
+    def get_bod_reg_period1_start(self):
+        return convert_to_begin_of_day(self.registration_period1_start)
+
+    def get_bod_reg_period2_start(self):
+        return convert_to_begin_of_day(self.registration_period2_start)
+
+    def get_bod_reg_period3_start(self):
+        return convert_to_begin_of_day(self.registration_period3_start)
+
+    def get_eod_grade_submission(self):
+        # returns a datetime object of the midnight at end of day
+        return convert_to_end_of_day(self.grade_submission_deadline)
+
+    def get_eod_aterm_last_day_add(self):
+        if not self.is_summer_quarter():
+            return None
+        return convert_to_end_of_day(self.aterm_last_day_add)
+
+    def get_eod_bterm_last_day_add(self):
+        if not self.is_summer_quarter():
+            return None
+        return convert_to_end_of_day(self.bterm_last_day_add)
+
+    def get_eod_last_day_add(self):
+        return convert_to_end_of_day(self.last_day_add)
+
+    def get_eod_last_day_drop(self):
+        return convert_to_end_of_day(self.last_day_drop)
+
+    def get_eod_last_final_exam(self):
+        return convert_to_end_of_day(self.last_final_exam_date)
+
+    def get_eod_last_instruction(self):
+        return convert_to_end_of_day(self.last_day_instruction)
+
+    def get_eod_summer_aterm(self):
+        if not self.is_summer_quarter():
+            return None
+        return convert_to_end_of_day(self.aterm_last_date)
 
     def term_label(self):
         return "%s,%s" % (self.year, self.quarter)
@@ -485,6 +544,25 @@ class Section(models.Model):
         if self.grade_date is not None:
             return str(self.grade_date)
         return None
+
+    def is_summer_a_term(self):
+        return is_a_term(self.summer_term)
+
+    def is_summer_b_term(self):
+        return is_b_term(self.summer_term)
+
+    def is_half_summer_term(self):
+        return (self.is_summer_a_term() or
+                self.is_summer_b_term())
+
+    def is_full_summer_term(self):
+        return is_full_summer_term(self.summer_term)
+
+    def is_same_summer_term(self, summer_term):
+        return (self.summer_term is None or len(self.summer_term) == 0) and\
+            (summer_term is None or len(self.summer_term) == 0) or\
+            self.summer_term is not None and summer_term is not None and\
+            self.summer_term.lower() == summer_term.lower()
 
     def json_data(self):
         data = {
