@@ -14,7 +14,7 @@ class File(object):
     The File DAO implementation returns generally static content.  Use this
     DAO with this configuration:
 
-    RESTCLIENTS_PANOPTO_DAO_CLASS = 'restclients.dao_implementation.panopto.File'
+    RESTCLIENTS_PANOPTO_DAO_CLASS='restclients.dao_implementation.panopto.File'
     """
     def getURL(self, url, headers):
         return get_mockdata_url("panopto", "file", url, headers)
