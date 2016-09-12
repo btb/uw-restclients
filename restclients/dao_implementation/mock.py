@@ -9,7 +9,11 @@ import socket
 from urllib import quote, unquote, urlencode
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.importlib import import_module
+try:
+    from importlib import import_module
+except:
+    # python 2.6
+    from django.utils.importlib import import_module
 from restclients.signals.rest_request import rest_request
 from restclients.signals.success import rest_request_passfail
 from restclients.mock_http import MockHTTP
@@ -218,6 +222,30 @@ def put_mockdata_url(service_name, implementation_name,
     return response
 
 
+def patch_mockdata_url(service_name, implementation_name,
+                       url, headers, body,
+                       dir_base=dirname(__file__)):
+    """
+    :param service_name:
+        possible "sws", "pws", "book", "hfs", etc.
+    :param implementation_name:
+        possible values: "file", etc.
+    """
+    # Currently this patch method does not return a response body
+    response = MockHTTP()
+    if body is not None:
+        if "dispatch" in url:
+            response.status = 200
+        else:
+            response.status = 201
+        response.headers = {"X-Data-Source": service_name + " file mock data",
+                            "Content-Type": headers['Content-Type']}
+    else:
+        response.status = 400
+        response.data = "Bad Request: no PATCH body"
+    return response
+
+
 def delete_mockdata_url(service_name, implementation_name,
                         url, headers,
                         dir_base=dirname(__file__)):
@@ -241,4 +269,4 @@ def convert_to_platform_safe(dir_file_name):
     :param dir_file_name: a string to be processed
     :return: a string with all the reserved characters replaced
     """
-    return re.sub('[\?|<>=:*,;+&"@]', '_', dir_file_name)
+    return re.sub('[\?|<>=:*,;+&"@$]', '_', dir_file_name)

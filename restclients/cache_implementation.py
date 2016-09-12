@@ -9,6 +9,11 @@ from django.utils.timezone import make_aware, get_current_timezone
 from django.conf import settings
 import json
 import bmemcached
+import logging
+import threading
+
+
+logger = logging.getLogger(__name__)
 
 
 class NoCache(object):
@@ -196,8 +201,13 @@ class MemcachedCache(object):
 
     def getCache(self, service, url, headers):
         client = self._get_client()
-
-        data = client.get(self._get_key(service, url))
+        key = self._get_key(service, url)
+        try:
+            data = client.get(key)
+        except bmemcached.exceptions.MemcachedException as ex:
+            logger.warning("MemCached Err on get with key '%s' ==> '%s'",
+                           key, str(ex))
+            return
 
         if not data:
             return
@@ -223,30 +233,40 @@ class MemcachedCache(object):
                            "data": response.data,
                            "headers": header_data})
 
-        time_to_store = self._get_time(service, url)
+        time_to_store = self.get_cache_expiration_time(service, url)
         key = self._get_key(service, url)
 
         client = self._get_client()
-        client.set(key, data, time=time_to_store)
+        try:
+            client.set(key, data, time=time_to_store)
+            logger.info("MemCached set with key '%s', %d seconds",
+                        key, time_to_store)
+        except bmemcached.exceptions.MemcachedException as ex:
+            logger.warning("MemCached Err on set with key '%s' ==> '%s'",
+                           key, str(ex))
         return
 
-    def _get_time(self, service, url):
-        # Defaults to 4 hours.  Your subclass probably wants to be smarter!
+    def get_cache_expiration_time(self, service, url):
+        # Over-ride this to define your own.
         return 60 * 60 * 4
 
     def _get_key(self, service, url):
         return "%s-%s" % (service, url)
 
     def _get_client(self):
-        if self.client:
-            return self.client
+        thread_id = threading.current_thread().ident
+        if not hasattr(MemcachedCache, "_memcached_cache"):
+            MemcachedCache._memcached_cache = {}
+
+        if thread_id in MemcachedCache._memcached_cache:
+            return MemcachedCache._memcached_cache[thread_id]
 
         servers = settings.RESTCLIENTS_MEMCACHED_SERVERS
-        username = getattr(settings, "RESTCLIENTS_MEMCACHED_USER", "")
-        password = getattr(settings, "RESTCLIENTS_MEMCACHED_PASS", "")
+        username = getattr(settings, "RESTCLIENTS_MEMCACHED_USER", None)
+        password = getattr(settings, "RESTCLIENTS_MEMCACHED_PASS", None)
 
         client = bmemcached.Client(servers, username, password)
 
-        self.client = client
+        MemcachedCache._memcached_cache[thread_id] = client
 
         return client

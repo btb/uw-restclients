@@ -7,9 +7,11 @@ from restclients.models.sws import GradeSubmissionDelegate
 from lxml import etree
 import re
 
+
 graderoster_url = "/student/v5/graderoster"
 
-def get_graderoster(section, instructor):
+
+def get_graderoster(section, instructor, requestor):
     """
     Returns a restclients.GradeRoster for the passed Section model and
     instructor Person.
@@ -18,7 +20,9 @@ def get_graderoster(section, instructor):
                         instructor=instructor).graderoster_label()
     url = "%s/%s" % (graderoster_url, encode_section_label(label))
     headers = {"Accept": "text/xhtml",
-               "X-UW-Act-as": instructor.uwnetid}
+               "Connection": "keep-alive",
+               "X-UW-Act-as": requestor.uwnetid}
+
     response = SWS_DAO().getURL(url, headers)
 
     if response.status != 200:
@@ -29,7 +33,7 @@ def get_graderoster(section, instructor):
     return graderoster_from_xhtml(response.data, section, instructor)
 
 
-def update_graderoster(graderoster):
+def update_graderoster(graderoster, requestor):
     """
     Updates the graderoster resource for the passed restclients.GradeRoster
     model. A new restclients.GradeRoster is returned, representing the
@@ -38,7 +42,8 @@ def update_graderoster(graderoster):
     label = graderoster.graderoster_label()
     url = "%s/%s" % (graderoster_url, encode_section_label(label))
     headers = {"Content-Type": "application/xhtml+xml",
-               "X-UW-Act-as": graderoster.instructor.uwnetid}
+               "Connection": "keep-alive",
+               "X-UW-Act-as": requestor.uwnetid}
     body = graderoster.xhtml()
 
     response = SWS_DAO().putURL(url, headers, body)

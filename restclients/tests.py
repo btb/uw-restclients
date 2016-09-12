@@ -1,12 +1,15 @@
-from django.utils import unittest
-
 from restclients.test.uwnetid.subscription import EmailForwardingTest
+from restclients.test.uwnetid.subscription_60 import KerberosSubsTest
+from restclients.test.uwnetid.subscription_233 import Office365EduSubsTest
+from restclients.test.uwnetid.subscription import NetidSubscriptionTest
+from restclients.test.uwnetid.subscription import NetidPostSubscriptionTest
 from restclients.test.util.date_formator import FormatorTest
 from restclients.test.util.datetime_convertor import DatetimeConvertorTest
-from restclients.test.util.summer_term import SummerTermTest
+from restclients.test.util.retry import RetryTest
 from restclients.test.hfs.idcard import HfsTest
+from restclients.test.hrpws.appointee import AppointeeTest
 from restclients.test.library.mylibinfo import MyLibInfoTest
-from restclients.test.digitlib.curric import DigitLibTest
+from restclients.test.library.currics import CurricsTest
 from restclients.test.grad.committee import CommitteeTest
 from restclients.test.grad.degree import DegreeTest
 from restclients.test.grad.leave import LeaveTest
@@ -48,6 +51,8 @@ from restclients.test.pws.err500.pws import PWSTest500
 from restclients.test.pws.invalid_dao import PWSTestInvalidDAO
 from restclients.test.pws.file_implementation.dao import PWSTestFileDAO
 
+from restclients.test.kws.key import KWSTestKeyData
+
 from restclients.test.gws.group import GWSGroupBasics
 from restclients.test.gws.course_group import GWSCourseGroupBasics
 from restclients.test.gws.search import GWSGroupSearch
@@ -82,6 +87,7 @@ from restclients.test.canvas.users import CanvasTestUsers
 from restclients.test.canvas.submissions import CanvasTestSubmissions
 from restclients.test.canvas.assignments import CanvasTestAssignments
 from restclients.test.canvas.quizzes import CanvasTestQuizzes
+from restclients.test.canvas.external_tools import CanvasTestExternalTools
 
 from restclients.test.catalyst.gradebook import CatalystTestGradebook
 
@@ -97,6 +103,9 @@ from restclients.test.wheniwork.accounts import WhenIWorkTestAccounts
 from restclients.test.wheniwork.users import WhenIWorkTestUsers
 
 from restclients.test.myplan import MyPlanTestData
+
+from restclients.test.o365.user import O365TestUser
+from restclients.test.o365.license import O365TestLicense
 
 from restclients.test.thread import ThreadsTest
 from restclients.test.view import ViewTest

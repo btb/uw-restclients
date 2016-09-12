@@ -1,9 +1,14 @@
-from django.utils.importlib import import_module
+try:
+    from importlib import import_module
+except:
+    # python 2.6
+    from django.utils.importlib import import_module
 from django.conf import settings
 from django.core.exceptions import *
 from restclients.dao_implementation.pws import File as PWSFile
 from restclients.dao_implementation.sws import File as SWSFile
 from restclients.dao_implementation.gws import File as GWSFile
+from restclients.dao_implementation.kws import File as KWSFile
 from restclients.dao_implementation.book import File as BookFile
 from restclients.dao_implementation.canvas import File as CanvasFile
 from restclients.dao_implementation.catalyst import File as CatalystFile
@@ -14,14 +19,18 @@ from restclients.dao_implementation.trumba import FileSea
 from restclients.dao_implementation.trumba import FileBot
 from restclients.dao_implementation.trumba import FileTac
 from restclients.dao_implementation.trumba import CalendarFile
-from restclients.dao_implementation.digitlib import File as DigitlibFile
 from restclients.dao_implementation.grad import File as GradFile
-from restclients.dao_implementation.libraries import File as LibrariesFile
+from restclients.dao_implementation.hrpws import File as HrpwsFile
+from restclients.dao_implementation.library.mylibinfo import (
+    File as MyLibInfoFile)
+from restclients.dao_implementation.library.currics import (
+    File as LibCurricsFile)
 from restclients.dao_implementation.myplan import File as MyPlanFile
 from restclients.dao_implementation.hfs import File as HfsFile
 from restclients.dao_implementation.uwnetid import File as UwnetidFile
 from restclients.dao_implementation.r25 import File as R25File
 from restclients.dao_implementation.iasystem import File as IASystemFile
+from restclients.dao_implementation.o365 import File as O365File
 from restclients.dao_implementation.wheniwork import File as WhenIWorkFile
 from restclients.cache_implementation import NoCache
 
@@ -85,6 +94,11 @@ class MY_DAO(DAO_BASE):
         response = dao.putURL(url, headers, body)
         return response
 
+    def _patchURL(self, service, url, headers, body=None):
+        dao = self._getDAO()
+        response = dao.patchURL(url, headers, body)
+        return response
+
 
 class Subdomain_DAO(MY_DAO):
     def _getURL(self, service, url, headers, subdomain):
@@ -128,6 +142,14 @@ class PWS_DAO(MY_DAO):
 
     def _getDAO(self):
         return self._getModule('RESTCLIENTS_PWS_DAO_CLASS', PWSFile)
+
+
+class KWS_DAO(MY_DAO):
+    def getURL(self, url, headers):
+        return self._getURL('kws', url, headers)
+
+    def _getDAO(self):
+        return self._getModule('RESTCLIENTS_KWS_DAO_CLASS', KWSFile)
 
 
 class GWS_DAO(MY_DAO):
@@ -177,12 +199,12 @@ class Catalyst_DAO(MY_DAO):
         return self._getModule('RESTCLIENTS_CATALYST_DAO_CLASS', CatalystFile)
 
 
-class DigitLib_DAO(MY_DAO):
+class Hrpws_DAO(MY_DAO):
     def getURL(self, url, headers):
-        return self._getURL('digitlib', url, headers)
+        return self._getURL('hrpws', url, headers)
 
     def _getDAO(self):
-        return self._getModule('RESTCLIENTS_DIGITLIB_DAO_CLASS', DigitlibFile)
+        return self._getModule('RESTCLIENTS_HRPWS_DAO_CLASS', HrpwsFile)
 
 
 class Grad_DAO(MY_DAO):
@@ -253,13 +275,22 @@ class Hfs_DAO(MY_DAO):
         return self._getModule('RESTCLIENTS_HFS_DAO_CLASS', HfsFile)
 
 
-class Libraries_DAO(MY_DAO):
+class MyLibInfo_DAO(MY_DAO):
     def getURL(self, url, headers):
         return self._getURL('libraries', url, headers)
 
     def _getDAO(self):
         return self._getModule('RESTCLIENTS_LIBRARIES_DAO_CLASS',
-                               LibrariesFile)
+                               MyLibInfoFile)
+
+
+class LibCurrics_DAO(MY_DAO):
+    def getURL(self, url, headers):
+        return self._getURL('libcurrics', url, headers)
+
+    def _getDAO(self):
+        return self._getModule('RESTCLIENTS_LIBCURRICS_DAO_CLASS',
+                               LibCurricsFile)
 
 
 class MyPlan_DAO(MY_DAO):
@@ -273,6 +304,9 @@ class MyPlan_DAO(MY_DAO):
 class Uwnetid_DAO(MY_DAO):
     def getURL(self, url, headers):
         return self._getURL('uwnetid', url, headers)
+
+    def postURL(self, url, headers, body):
+        return self._postURL('uwnetid', url, headers, body)
 
     def _getDAO(self):
         return self._getModule('RESTCLIENTS_UWNETID_DAO_CLASS', UwnetidFile)
@@ -334,6 +368,20 @@ class IASYSTEM_DAO(Subdomain_DAO):
 
     def _getDAO(self):
         return self._getModule('RESTCLIENTS_IASYSTEM_DAO_CLASS', IASystemFile)
+
+
+class O365_DAO(MY_DAO):
+    def getURL(self, url, headers):
+        return self._getURL('o365', url, headers)
+
+    def postURL(self, url, headers, body):
+        return self._postURL('o365', url, headers, body)
+
+    def patchURL(self, url, headers, body):
+        return self._patchURL('o365', url, headers, body)
+
+    def _getDAO(self):
+        return self._getModule('RESTCLIENTS_O365_DAO_CLASS', O365File)
 
 
 class WhenIWork_DAO(MY_DAO):

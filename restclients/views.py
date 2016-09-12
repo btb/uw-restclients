@@ -1,12 +1,18 @@
+try:
+    from importlib import import_module
+except:
+    # python 2.6
+    from django.utils.importlib import import_module
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
 from django.http import HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponse
 from django.template import loader, RequestContext, TemplateDoesNotExist
 from django.shortcuts import render_to_response
-from restclients.dao import SWS_DAO, PWS_DAO, GWS_DAO, NWS_DAO, Hfs_DAO, \
-    Book_DAO, Canvas_DAO, Uwnetid_DAO, Libraries_DAO, TrumbaCalendar_DAO, \
-    MyPlan_DAO, IASYSTEM_DAO, Grad_DAO
+from restclients.dao import SWS_DAO, PWS_DAO, GWS_DAO, NWS_DAO, Hfs_DAO,\
+    Book_DAO, Canvas_DAO, Uwnetid_DAO, MyLibInfo_DAO, LibCurrics_DAO,\
+    TrumbaCalendar_DAO, MyPlan_DAO, IASYSTEM_DAO, Grad_DAO
 from restclients.mock_http import MockHTTP
 from authz_group import Group
 from userservice.user import UserService
@@ -57,7 +63,9 @@ def proxy(request, service, url):
     elif service == "uwnetid":
         dao = Uwnetid_DAO()
     elif service == "libraries":
-        dao = Libraries_DAO()
+        dao = MyLibInfo_DAO()
+    elif service == "libcurrics":
+        dao = LibCurrics_DAO()
     elif service == "myplan":
         dao = MyPlan_DAO()
     elif service == "iasystem":
@@ -71,6 +79,7 @@ def proxy(request, service, url):
             else:
                 subdomain = url[:2]
                 url = url[3:]
+
     elif service == "calendar":
         dao = TrumbaCalendar_DAO()
         use_pre = True
@@ -80,13 +89,30 @@ def proxy(request, service, url):
     url = "/%s" % quote(url)
 
     if request.GET:
-        url = "%s?%s" % (url, urlencode(request.GET))
+        try:
+            url = "%s?%s" % (url, urlencode(request.GET))
+        except UnicodeEncodeError:
+            err = "Bad URL param given to the restclients browser"
+            return HttpResponse(err)
 
     start = time()
     try:
         if service == "iasystem" and subdomain is not None:
             response = dao.getURL(url, headers, subdomain)
         else:
+            if service == "libcurrics":
+                if "?campus=" in url:
+                    url = url.replace("?campus=", "/")
+                elif "course?" in url:
+                    url_prefix = re.sub(r'\?.*$', "", url)
+                    url = "%s/%s/%s/%s/%s/%s" % (
+                        url_prefix,
+                        request.GET["year"],
+                        request.GET["quarter"],
+                        request.GET["curriculum_abbr"].replace(" ", "%20"),
+                        request.GET["course_number"],
+                        request.GET["section_id"])
+
             response = dao.getURL(url, headers)
     except Exception as ex:
         response = MockHTTP()
