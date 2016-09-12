@@ -11,6 +11,11 @@ from restclients.util.datetime_convertor import convert_to_begin_of_day,\
 from restclients.models.base import RestClientsModel
 
 
+class UnsavedForeignKey(models.ForeignKey):
+    # A ForeignKey which can point to an unsaved object
+    allow_unsaved_instance_assignment = True
+
+
 # PWS Person
 class Person(RestClientsModel):
     uwregid = models.CharField(max_length=32,
@@ -379,9 +384,9 @@ class Section(RestClientsModel):
         (LMS_OWNER_OL, LMS_OWNER_OL),
     )
 
-    term = models.ForeignKey(Term,
+    term = UnsavedForeignKey(Term,
                              on_delete=models.PROTECT)
-    final_exam = models.ForeignKey(FinalExam,
+    final_exam = UnsavedForeignKey(FinalExam,
                                    on_delete=models.PROTECT,
                                    null=True)
 
@@ -653,9 +658,9 @@ class Registration(RestClientsModel):
 
 
 class SectionMeeting(RestClientsModel):
-    term = models.ForeignKey(Term,
+    term = UnsavedForeignKey(Term,
                              on_delete=models.PROTECT)
-    section = models.ForeignKey(Section,
+    section = UnsavedForeignKey(Section,
                                 on_delete=models.PROTECT)
     meeting_index = models.PositiveSmallIntegerField()
     meeting_type = models.CharField(max_length=20)
